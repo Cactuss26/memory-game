@@ -18,6 +18,7 @@ export default function Card({imageurl, name, shufflefunc, updateScore, resetGam
             }
         }}>
             <img src={imageurl} alt={name}/>
+            <p>{name}</p>
         </button>
     )
 }

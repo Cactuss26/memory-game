@@ -23,26 +23,20 @@ function App() {
             const requests = [];
 
             const idset = new Set();
-            for (let i = 0; i < NO_OF_IMAGES; i++) idset.add(Math.floor(Math.random() * (MAX_ID - 1)) + 1);
+            while(idset.size < NO_OF_IMAGES) idset.add(Math.floor(Math.random() * (MAX_ID - 1)) + 1);
             const ids = Array.from(idset);
             ids.map(id => requests.push(fetchData(id)));
-
-            const responses = Promise.all(requests);
-            const responses2 = responses.map(response => response.clone());
-    
-            const extractedImages = responses.map(response => {
-                if (isMounted) {
-                     return response.sprites.front_default;
-                }
-            })
-    
-            const extractedNames = responses2.map(response => {
-                if (isMounted) {
-                    return response.name;
-                }
-            })
+            
+            const responses = await Promise.all(requests);
             
             if (isMounted) {
+                const extractedData = responses.map(response => {
+                    return {image: response.sprites.front_default, name: response.name};
+                })
+        
+                const extractedImages = extractedData.map(data => data.image);
+                const extractedNames = extractedData.map(data => data.name);
+                
                 setimages(extractedImages);
                 setnames(extractedNames);
             }
