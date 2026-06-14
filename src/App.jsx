@@ -53,7 +53,7 @@ function App() {
     }
 
     const resetGame = () => {
-        setbestScore(score);
+        if (score > bestScore) setbestScore(score);
         setscore(0);
     }
 

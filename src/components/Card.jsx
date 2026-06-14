@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Card({imageurl, name, shufflefunc, updateScore, resetGame}) {
+export default function Card({imageurl, name, shufflefunc, updateScore, resetGame, resetKeys}) {
     const [selected, changeselected] = useState(0);
 
     return (
@@ -13,7 +13,7 @@ export default function Card({imageurl, name, shufflefunc, updateScore, resetGam
 
             else {
                 changeselected(0);
-                shufflefunc();
+                resetKeys();
                 resetGame();
             }
         }}>

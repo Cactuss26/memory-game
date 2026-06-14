@@ -2,11 +2,15 @@ import Card from "./Card.jsx"
 import { NO_OF_IMAGES } from "./config.jsx";
 
 const keyset = new Set();
-while(keyset.size < NO_OF_IMAGES) keyset.add(Math.floor(Math.random() * (NO_OF_IMAGES)));
+while(keyset.size < NO_OF_IMAGES) keyset.add(window.crypto.randomUUID());
 let cardkeys = Array.from(keyset);
 
-export default function CardHolder({images, names, updateScore, resetGame}) {
+let keymap = {};
+cardkeys.map((key, index) => {
+    keymap[key] = index;
+})
 
+export default function CardHolder({images, names, updateScore, resetGame}) {
     // shuffle cards when user clicks on one
     function shuffleCards() {
         cardkeys = cardkeys.map(key => ({ key, sort: Math.random() }))
@@ -14,14 +18,26 @@ export default function CardHolder({images, names, updateScore, resetGame}) {
                            .map(({ key }) => key); 
     }
     
-    const cards = cardkeys.map(cardkey => {
+    function resetKeys() {
+        const keyset = new Set();
+        while(keyset.size < NO_OF_IMAGES) keyset.add(window.crypto.randomUUID());
+        cardkeys = Array.from(keyset);
+        keymap = {};
+        cardkeys.map((key, index) => {
+          keymap[key] = index;
+        })
+    }
+
+
+    const cards = cardkeys.map((cardkey) => {
         return <Card 
         key={cardkey} 
-        imageurl={images[cardkey]} 
-        name={names[cardkey]} 
+        imageurl={images[keymap[cardkey]]} 
+        name={names[keymap[cardkey]]} 
         shufflefunc={shuffleCards}
         updateScore={updateScore}
-        resetGame={resetGame}/>
+        resetGame={resetGame}
+        resetKeys={resetKeys}/>
     })
 
     return (
